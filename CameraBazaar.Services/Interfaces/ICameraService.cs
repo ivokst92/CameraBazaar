@@ -1,6 +1,7 @@
 ﻿namespace CameraBazaar.Services.Interfaces
 {
     using CameraBazaar.Data.Models;
+    using CameraBazaar.Services.BusinessModels;
     using System.Collections.Generic;
 
     public interface ICameraService
@@ -19,5 +20,8 @@
                     string description,
                     string imageUrl,
                     string userId);
+
+        CameraDTO GetCamera(int Id, string userId);
+
     }
 }

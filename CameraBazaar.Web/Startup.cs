@@ -1,8 +1,10 @@
 ﻿namespace CameraBazaar.Web
 {
+    using AutoMapper;
     using CameraBazaar.Data;
     using CameraBazaar.Data.Models;
     using CameraBazaar.Web.Infrastructure;
+    using CameraBazaar.Web.Infrastructure.Filters;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -18,8 +20,7 @@
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CameraBazaarDbContext>(options => options
@@ -36,6 +37,11 @@
                 .AddDefaultTokenProviders();
             services.AddDomainServices();
             services.AddMvc();
+            services.AddAutoMapper();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<LogAttribute>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class AddCameraViewModel
+    public class CameraViewModel
     {
         public int Id { get; set; }
 

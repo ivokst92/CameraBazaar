@@ -2,7 +2,9 @@
 {
     using CameraBazaar.Data;
     using CameraBazaar.Data.Models;
+    using CameraBazaar.Services.BusinessModels;
     using CameraBazaar.Services.Interfaces;
+    using CameraBazaar.Services.Utils;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -51,5 +53,26 @@
             this.db.Cameras.Add(camera);
             this.db.SaveChanges();
         }
+
+        public CameraDTO GetCamera(int id, string userId)
+        => this.db.Cameras
+            .Where(x => x.Id == id && x.UserId == userId)
+                .Select(x => new CameraDTO
+                {
+                    Make = x.Make,
+                    Description = x.Description,
+                    ImageUrl = x.ImageUrl,
+                    IsFullFrame = x.IsFullFrame,
+                    LightMetering = EnumMapping.ToValues<LightMetering>(x.LightMetering),
+                    MaxISO = x.MaxISO,
+                    MaxShutterSpeed = x.MaxShutterSpeed,
+                    MinISO = x.MinISO,
+                    MinShutterSpeed = x.MinShutterSpeed,
+                    Model = x.Model,
+                    Price = x.Price,
+                    Quantity = x.Quantity,
+                    VideoResolution = x.VideoResolution,
+                }).First();
+
     }
 }
