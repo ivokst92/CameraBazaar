@@ -1,56 +1,30 @@
 ﻿namespace CameraBazaar.Services.Services
 {
+    using AutoMapper;
     using CameraBazaar.Data;
     using CameraBazaar.Data.Models;
     using CameraBazaar.Services.BusinessModels;
     using CameraBazaar.Services.Interfaces;
     using CameraBazaar.Services.Utils;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class CameraService : ICameraService
     {
         private readonly CameraBazaarDbContext db;
-
-        public CameraService(CameraBazaarDbContext db)
+        private readonly IMapper mapper;
+        public CameraService(CameraBazaarDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
-        public void Create(CameraMakeType make,
-            string model,
-            decimal price,
-            int quantity,
-            int minShutterSpeed,
-            int maxShutterSpeed,
-            MinISO minISO,
-            int maxISO,
-            bool isFullFrame,
-            string videoResolution,
-            IEnumerable<LightMetering> lightMeterings,
-            string description,
-            string imageUrl,
-            string userId)
-        {
-            var camera = new Camera
-            {
-                Make = make,
-                Description = description,
-                ImageUrl = imageUrl,
-                IsFullFrame = isFullFrame,
-                LightMetering = (LightMetering)lightMeterings.Cast<int>().Sum(),
-                MaxISO = maxISO,
-                MaxShutterSpeed = maxShutterSpeed,
-                MinISO = minISO,
-                MinShutterSpeed = minShutterSpeed,
-                Model = model,
-                Price = price,
-                Quantity = quantity,
-                VideoResolution = videoResolution,
-                UserId = userId
-            };
 
-            this.db.Cameras.Add(camera);
+        public void Create(CameraDTO camera, string userId)
+        {
+            var cameraEntity = mapper.Map<CameraDTO, Camera>(camera);
+            cameraEntity.LightMetering = (LightMetering)camera.LightMetering.Cast<int>().Sum();
+            cameraEntity.UserId = userId;
+            this.db.Cameras.Add(cameraEntity);
             this.db.SaveChanges();
         }
 
@@ -74,5 +48,17 @@
                     VideoResolution = x.VideoResolution,
                 }).First();
 
+        public bool IsCameraOfCurrentUser(int cameraId, string userId)
+        => this.db.Cameras.Where(x => x.Id == cameraId && x.UserId == userId).Any();
+
+
+        public void Update(CameraDTO camera, string userId)
+        {
+            var cameraEntity = mapper.Map<CameraDTO, Camera>(camera);
+            cameraEntity.LightMetering = (LightMetering)camera.LightMetering.Cast<int>().Sum();
+            cameraEntity.UserId = userId;
+            this.db.Cameras.Update(cameraEntity);
+            this.db.SaveChanges();
+        }
     }
 }

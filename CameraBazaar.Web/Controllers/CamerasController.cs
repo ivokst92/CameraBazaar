@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System;
 
     public class CamerasController : Controller
     {
@@ -33,20 +34,8 @@
             {
                 return View(cameraModel);
             }
-
-            this.cameraService.Create(cameraModel.Make,
-                cameraModel.Model,
-                cameraModel.Price,
-                cameraModel.Quantity,
-                cameraModel.MinShutterSpeed,
-                cameraModel.MaxShutterSpeed,
-                cameraModel.MinISO,
-                cameraModel.MaxISO,
-                cameraModel.IsFullFrame,
-                cameraModel.VideoResolution,
-                cameraModel.LightMetering,
-                cameraModel.Description,
-                cameraModel.ImageUrl,
+            var model = mapper.Map<CameraViewModel, CameraDTO>(cameraModel);
+            this.cameraService.Create(model,
                 this.userManager.GetUserId(User));
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -68,8 +57,19 @@
             {
                 return View(cameraModel);
             }
+            string currentUserId = this.userManager.GetUserId(User);
+            bool IsEdiAllow = this.cameraService.IsCameraOfCurrentUser(cameraModel.Id
+                  , currentUserId);
 
-            //TODO EDIT
+            if (IsEdiAllow)
+            {
+                var dtoModel = mapper.Map<CameraViewModel, CameraDTO>(cameraModel);
+                this.cameraService.Update(dtoModel, currentUserId);
+            }
+            else
+            {
+                throw new InvalidOperationException("Users can edit only their own cameras");
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
