@@ -90,7 +90,7 @@ namespace CameraBazaar.Web.Controllers
             {
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
             }
-
+            
             var model = new LoginWith2faViewModel { RememberMe = rememberMe };
             ViewData["ReturnUrl"] = returnUrl;
 

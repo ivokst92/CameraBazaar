@@ -23,6 +23,16 @@
             this.mapper = mapper;
         }
 
+        public IActionResult Details(int Id)
+        {
+            var camera = this.cameraService.GetById(Id);
+            var model = mapper.Map<CameraDTO, CameraViewModel>(camera);
+            return View(model);
+        }
+
+        public IActionResult SellerCameras(string userId)
+        => View(this.cameraService.GetSellersCameras(userId));
+
         [Authorize]
         public IActionResult Add() => View();
 
@@ -40,6 +50,7 @@
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
 
         [Authorize]
         public IActionResult Edit(int Id)
@@ -73,5 +84,21 @@
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
+        [Authorize]
+        public IActionResult DeleteConfirmation(int Id)
+        {
+            return View(Id);
+        }
+
+        [Authorize]
+        public IActionResult Destroy(int Id)
+        {
+            this.cameraService.Delete(Id, this.userManager.GetUserId(User));
+            return RedirectToAction(nameof(All));
+        }
+
+
+        public IActionResult All() => View(this.cameraService.All());
     }
 }

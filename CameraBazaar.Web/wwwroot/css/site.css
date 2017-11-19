@@ -33,3 +33,24 @@
         display: none;
     }
 }
+
+.img-maxsize {
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.text-Bold {
+    font-weight: bold;
+}
+
+.camera-in-stock {
+    color: green;
+}
+
+.camera-out-of-stock {
+    color: red;
+}
+
+.row-bordered {
+    border: 1px solid gray;
+}

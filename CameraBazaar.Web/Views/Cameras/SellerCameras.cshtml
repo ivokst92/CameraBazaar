@@ -1,0 +1,41 @@
+﻿@model SellerCamerasDTO
+@{
+    ViewData["Title"] = "Seller Cameras";
+}
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form">
+            <h2>@Model.Username</h2>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @if (User.Identity.Name == Model.Username)
+                {
+                    <a asp-area="" class="btn btn-primary" asp-controller="User" asp-action="Edit">Edit Profile</a>
+                }
+            }
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="Email"></label>
+            @Model.Email
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="Phone"></label>
+            @Model.Phone
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="Cameras"></label>
+            @Model.CamerasInStock in stock/ @Model.CamerasOutOfStock out of stock
+        </div>
+        <div class="container">
+            @if (Model.Cameras.Count() == 0)
+            {
+                <span>The user is not selling any cameras. Go to <a href="/Home/Index">home page</a><br /> to find more offers of other users</span>
+            }
+            else
+            {
+                @Html.Partial("_CameraCollectionForm", Model.Cameras);
+            }
+        </div>
+    </div>
+</div>

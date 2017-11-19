@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CameraDTO>
+
+<div class="col-xs-6">
+
+    @foreach (var camera in Model)
+    {
+        bool InStock = (camera.Quantity != 0);
+        <div class="row row-bordered">
+            <div class="col-xs-4">
+                <div class="big-box"><img src="@camera.ImageUrl" class="img-thumbnail img-responsive img-maxsize" /></div>
+            </div>
+            <div class="col-xs-8">
+                <div class="row">
+                    <div class="col-xs-6"><h4>@camera.Make @camera.Model</h4></div>
+                    <div class="col-xs-6"><h4>$@camera.Price</h4></div>
+                    <div class="col-xs-6">
+                        <h4> <a href="/cameras/details?Id=@camera.Id">Details</a></h4>
+                    </div>
+                    <div class="col-xs-6 @(InStock ? "camera-in-stock":"camera-out-of-stock")"><h4>@(!InStock ? "OUT OF STOCK" : "IN STOCK")</h4></div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.Identity.Name == camera.Username && this.ViewContext.RouteData.Values["action"].ToString() == "sellercameras")
+                        {
+                            <div class="col-xs-6"><a class="btn btn-primary" href="/cameras/edit/@camera.Id">Edit</a></div>
+                            <div class="col-xs-6"><a class="btn btn-warning" href="/cameras/DeleteConfirmation/@camera.Id">Delete</a></div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

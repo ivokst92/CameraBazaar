@@ -1,0 +1,57 @@
+﻿@model CameraViewModel
+@{
+    ViewData["Title"] = "Camera Details";
+}
+<h2>@ViewData["Title"]</h2>
+@{
+    bool InStock = Model.Quantity != 0;
+}
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form">
+            <label class="text-Bold">@Model.Make @Model.Model - $@Model.Price - </label>
+            <label class="text-Bold @(InStock ? "camera-in-stock":"camera-out-of-stock")">@(!InStock ? "OUT OF STOCK" : "IN STOCK")</label>
+            
+        </div>
+        <div class="form">
+            <h4> <a href="/cameras/sellercameras?userId=@Model.UserId">@Model.Username</a></h4>
+        </div>
+        <img src="@Model.ImageUrl" class="img-thumbnail img-responsive img-maxsize" />
+        <div class="form">
+            <label class="text-Bold" asp-for="IsFullFrame"></label>
+            @(Model.IsFullFrame ? "YES" : "NO")
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="MinShutterSpeed"></label>
+            @Model.MinShutterSpeed
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="MaxShutterSpeed"></label>
+            @Model.MaxShutterSpeed
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="MinISO"></label>
+            @Model.MinISO
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="MaxISO"></label>
+            @Model.MaxISO
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="VideoResolution"></label>
+            @Model.VideoResolution
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="LightMetering"></label>
+            @foreach (var lm in Model.LightMetering)
+            {
+                <div>- @lm</div>
+            }
+        </div>
+        <div class="form">
+            <label class="text-Bold" asp-for="Description"></label>
+            @Model.Description
+        </div>
+    </div>
+</div>
